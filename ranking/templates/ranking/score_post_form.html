@@ -6,7 +6,27 @@
 <div class="panel">
 <form method="post" id="score-post-form">
     {% csrf_token %}
-    {{ form.as_p }}
+
+    <p>{{ form.boss.label_tag }} {{ form.boss }}</p>
+    <p>{{ form.score.label_tag }} {{ form.score }}</p>
+
+    <div class="attribute-filter-wrapper mb-3">
+        <label class="form-label">属性でキャラを絞り込む</label>
+        <div class="btn-group-attribute" id="attribute-filter-buttons">
+        <button type="button" class="attr-btn active" data-attr="all">すべて</button>
+        <button type="button" class="attr-btn" data-attr="fire">火</button>
+        <button type="button" class="attr-btn" data-attr="water">水</button>
+        <button type="button" class="attr-btn" data-attr="wind">風</button>
+        <button type="button" class="attr-btn" data-attr="light">光</button>
+        <button type="button" class="attr-btn" data-attr="dark">闇</button>
+        <button type="button" class="attr-btn" data-attr="earth">土</button>
+        </div>
+    </div>
+
+    <p>{{ form.character_1.label_tag }} {{ form.character_1 }}</p>
+    <p>{{ form.character_2.label_tag }} {{ form.character_2 }}</p>
+    <p>{{ form.character_3.label_tag }} {{ form.character_3 }}</p>
+    <p>{{ form.mvp_slot.label_tag }} {{ form.mvp_slot }}</p>
 
     <p>
         <label>最終スコア画面のスクショ</label>
@@ -26,8 +46,56 @@
 </form>
 </div>
 
+{{ character_attributes|json_script:"character-attributes-data" }}
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/*
+キャラクター属性絞り込みロジック
+*/
+document.addEventListener("DOMContentLoaded", () => {
+    const charAttrDataEl = document.getElementById("character-attributes-data");
+    if (!charAttrDataEl) return;
+
+    const charAttrMap = JSON.parse(charAttrDataEl.textContent);
+  
+    const charSelects = [
+        document.getElementById("id_character_1"),
+        document.getElementById("id_character_2"),
+        document.getElementById("id_character_3")
+    ].filter(Boolean);
+
+    const filterButtons = document.querySelectorAll("#attribute-filter-buttons .attr-btn");
+
+    filterButtons.forEach(button => {
+        button.addEventListener("click", function() {
+
+        filterButtons.forEach(btn => btn.classList.remove("active"));
+        this.classList.add("active");
+
+        const selectedAttr = this.getAttribute("data-attr");
+
+        charSelects.forEach(select => {
+            Array.from(select.options).forEach(option => {
+            if (!option.value) return;
+
+            const charAttr = charAttrMap[option.value];
+            if (selectedAttr === "all" || charAttr === selectedAttr) {
+                option.style.display = "";
+                option.disabled = false;
+            } else {
+                option.style.display = "none";
+                option.disabled = true;
+            }
+            });
+        });
+        });
+    });
+});
+
+/*
+Supabase画像アップロード ＆ フォーム送信（既存コード）
+*/
 const supabaseClient = supabase.createClient(
     "{{ supabase_url }}",
     "{{ supabase_key }}"

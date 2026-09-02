@@ -239,3 +239,40 @@ tbody tr:last-child td {
     background-color: #FFF3D6;
     font-weight: bold;
 }
+
+/* ==========================
+   属性絞り込みボタン
+========================== */
+.attribute-filter-wrapper {
+    margin-bottom: 16px;
+}
+
+.attribute-filter-wrapper .form-label {
+    display: block;
+    font-size: 13px;
+    color: var(--color-gray-text);
+    margin-bottom: 8px;
+}
+
+.btn-group-attribute {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.attr-btn {
+    background-color: var(--color-white);
+    color: var(--color-navy);
+    border: 1px solid #cfc9e6;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.attr-btn.active {
+    background-color: var(--color-gold);
+    border-color: var(--color-gold);
+    font-weight: bold;
+}

@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import CustomUser, ScorePost
+from .models import CustomUser, ScorePost, Season
 
 
 class SignUpForm(UserCreationForm):
@@ -19,3 +19,9 @@ class ScorePostForm(forms.ModelForm):
             "character_3",
             "mvp_slot",
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        current_season = Season.objects.first()
+        if current_season:
+            self.fields["boss"].queryset = current_season.bosses.all()

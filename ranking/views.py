@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView, DetailView, CreateView
 from django.urls import reverse_lazy
 from .forms import SignUpForm, ScorePostForm
-from .models import Season, Boss, ScorePost
+from .models import Season, Boss, ScorePost, Character
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
 from django.contrib import messages
@@ -104,6 +104,11 @@ class ScorePostCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
+        # 全キャラクターの { "ID": "属性文字列" } マッピング辞書を作成してコンテキストへ追加
+        characters = Character.objects.all()
+        context["character_attributes"] = {str(c.id): c.attribute for c in characters}
+        
         context["supabase_url"] = settings.SUPABASE_URL
         context["supabase_key"] = settings.SUPABASE_PUBLISHABLE_KEY
         return context
