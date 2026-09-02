@@ -1,0 +1,43 @@
+sequenceDiagram
+    participant U as ユーザー
+    participant B as ブラウザ
+    participant HV as HomeView
+    participant HT as ホーム画面(home.html)
+    participant BM as Bossモデル
+    participant SPM as ScorePostモデル
+    participant DB as Supabase DB
+    participant DV as ScorePostDetailView
+    participant DT as 投稿詳細画面(detail.html)
+
+    U->>B: サイトにアクセス
+    B->>HV: GET /(ホーム)
+    HV->>BM: 現行シーズンのボス情報を取得
+    BM->>DB: SELECT文発行
+    DB-->>BM: ボス情報を返却
+    BM-->>HV: ボス情報を返す
+
+    HV->>SPM: ランキング取得(現行シーズン・デフォルト表示モード)
+    SPM->>DB: 該当ScorePostを取得(不正/非表示フラグ除外)
+    DB-->>SPM: 投稿一覧を返却
+    SPM->>SPM: ユーザーごとに最高スコアへ絞り込み・降順ソート
+    SPM-->>HV: ランキング一覧(ユーザー名・スコア)を返す
+
+    HV->>HT: ランキング一覧を表示
+    HT-->>B: ユーザー名・スコア・詳細ボタン付きの一覧を表示
+    B-->>U: 表示
+
+    U->>B: 表示モード切替(ボス別/属性別/合算)を選択
+    B->>HV: GET /?mode=xxx
+    Note over HV,SPM: 上記と同様の流れでモードに応じたクエリを実行
+    HV-->>B: 切り替え後のランキングを表示
+    B-->>U: 表示
+
+    U->>B: 特定の行の「詳細」ボタンを押下
+    B->>DV: GET /post/<id>
+    DV->>SPM: 該当ScorePostを取得
+    SPM->>DB: SELECT文発行(スクショURL・使用キャラ含む)
+    DB-->>SPM: 詳細データを返却
+    SPM-->>DV: 投稿詳細を返す
+    DV->>DT: 詳細画面を表示
+    DT-->>B: 使用キャラ・MVPキャラ・スクショ画像を表示
+    B-->>U: 表示

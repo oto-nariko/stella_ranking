@@ -1,0 +1,24 @@
+{% extends "ranking/base.html" %}
+
+{% block content %}
+<h2>投稿詳細</h2>
+
+<p>投稿者：{{ post.user.display_name }}</p>
+<p>ボス：{{ post.boss.name }}</p>
+<p>スコア：{{ post.score }}</p>
+
+<p>使用キャラ：
+    {{ post.character_1.name }}（{{ post.character_1.get_attribute_display }}）,
+    {{ post.character_2.name }}（{{ post.character_2.get_attribute_display }}）,
+    {{ post.character_3.name }}（{{ post.character_3.get_attribute_display }}）
+</p>
+<p>MVPキャラ：{{ post.mvp_character.name }}</p>
+
+<p>最終スコア画面：</p>
+<img src="{{ post.screenshot_url }}" alt="最終スコア画面" style="max-width: 100%;">
+
+<p>ダメージ統計画面：</p>
+<img src="{{ post.damage_stats_screenshot_url }}" alt="ダメージ統計画面" style="max-width: 100%;">
+
+<p><a href="{% url 'ranking:home' %}">ランキングへ戻る</a></p>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ステラソラ非公式ランキング{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'ranking/css/style.css' %}">
+</head>
+<body>
+<header>
+    <h1><a href="{% url 'ranking:home' %}">ステラソラ非公式ランキング</a></h1>
+    <nav>
+        {% if user.is_authenticated %}
+            <span>{{ user.display_name }}さん</span>
+            <a href="{% url 'ranking:mypage' %}">マイページ</a>
+            <a href="{% url 'ranking:score_post_create' %}">スコア投稿</a>
+            <form method="post" action="{% url 'ranking:logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">ログアウト</button>
+            </form>
+        {% else %}
+            <a href="{% url 'ranking:login' %}">ログイン</a>
+            <a href="{% url 'ranking:signup' %}">サインアップ</a>
+        {% endif %}
+    </nav>
+</header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 ステラソラ非公式ランキング</p>
+    </footer>
+</body>
+</html>

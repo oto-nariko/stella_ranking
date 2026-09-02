@@ -1,0 +1,104 @@
+{% extends "ranking/base.html" %}
+
+{% block content %}
+<h2>スコア投稿</h2>
+
+<div class="panel">
+<form method="post" id="score-post-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <p>
+        <label>最終スコア画面のスクショ</label>
+        <input type="file" id="screenshot-input" accept="image/*" required>
+    </p>
+    <p>
+        <label>ダメージ統計画面のスクショ</label>
+        <input type="file" id="damage-stats-input" accept="image/*" required>
+    </p>
+
+    <input type="hidden" name="screenshot_url" id="screenshot-url">
+    <input type="hidden" name="damage_stats_screenshot_url" id="damage-stats-url">
+
+    <p id="upload-status"></p>
+
+    <button type="submit" id="submit-button">投稿する</button>
+</form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabaseClient = supabase.createClient(
+    "{{ supabase_url }}",
+    "{{ supabase_key }}"
+);
+
+// 画像を横幅1000px以下・JPEG80%に圧縮する関数
+function compressImage(file) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+            const maxWidth = 1000;
+            const scale = Math.min(1, maxWidth / img.width);
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width * scale;
+            canvas.height = img.height * scale;
+            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((blob) => resolve(blob), "image/jpeg", 0.8);
+        };
+        img.src = URL.createObjectURL(file);
+    });
+}
+
+// 圧縮した画像をSupabase Storageにアップロードし、公開URLを返す関数
+async function uploadToSupabase(blob, prefix) {
+    const fileName = `${prefix}_${Date.now()}.jpg`;
+    const { error } = await supabaseClient.storage
+        .from("screenshots")
+        .upload(fileName, blob, { contentType: "image/jpeg" });
+
+    if (error) {
+        throw error;
+    }
+
+    const { data } = supabaseClient.storage.from("screenshots").getPublicUrl(fileName);
+    return data.publicUrl;
+}
+
+const formEl = document.getElementById("score-post-form");
+const submitButton = document.getElementById("submit-button");
+const statusEl = document.getElementById("upload-status");
+
+formEl.addEventListener("submit", async (event) => {
+    event.preventDefault();  // 一旦、通常の送信を止める
+
+    const screenshotFile = document.getElementById("screenshot-input").files[0];
+    const damageStatsFile = document.getElementById("damage-stats-input").files[0];
+
+    if (!screenshotFile || !damageStatsFile) {
+        statusEl.textContent = "スクショを2枚とも選択してください。";
+        return;
+    }
+
+    submitButton.disabled = true;
+    statusEl.textContent = "画像をアップロード中...";
+
+    try {
+        const compressedScreenshot = await compressImage(screenshotFile);
+        const compressedDamageStats = await compressImage(damageStatsFile);
+
+        const screenshotUrl = await uploadToSupabase(compressedScreenshot, "score");
+        const damageStatsUrl = await uploadToSupabase(compressedDamageStats, "damage");
+
+        document.getElementById("screenshot-url").value = screenshotUrl;
+        document.getElementById("damage-stats-url").value = damageStatsUrl;
+
+        statusEl.textContent = "アップロード完了。投稿しています...";
+        formEl.submit();  // ここで初めて、Django側へ本来のフォーム送信を行う
+    } catch (err) {
+        statusEl.textContent = "アップロードに失敗しました：" + err.message;
+        submitButton.disabled = false;
+    }
+});
+</script>
+{% endblock %}

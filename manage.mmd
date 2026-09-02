@@ -1,0 +1,46 @@
+sequenceDiagram
+    participant A as 管理者
+    participant B as ブラウザ
+    participant AD as Django Admin画面
+    participant SPADMIN as ScorePostAdmin
+    participant UADMIN as UserAdmin
+    participant SPM as ScorePostモデル
+    participant UM as Userモデル
+    participant DB as Supabase DB
+
+    A->>B: 管理画面URLにアクセスしログイン
+    B->>AD: 認証情報を送信
+    AD->>UM: is_staff権限を確認
+    UM->>DB: SELECT文発行
+    DB-->>UM: 権限情報を返却
+    UM-->>AD: 認証結果を返す
+    AD-->>B: 管理トップ画面を表示
+    B-->>A: 表示
+
+    A->>B: 「スコア投稿」一覧を選択
+    B->>SPADMIN: GET /admin/scorepost/
+    SPADMIN->>SPM: 投稿一覧を取得(スクショサムネイル込み)
+    SPM->>DB: SELECT文発行
+    DB-->>SPM: 一覧を返却
+    SPM-->>SPADMIN: 一覧を返す
+    SPADMIN-->>B: 一覧表示(証拠スクショのサムネイル付き)
+    B-->>A: 表示
+
+    A->>B: 不正な投稿にチェックを入れ「不正フラグを立てる」を実行
+    B->>SPADMIN: POST(選択したid一覧、アクション種別)
+    SPADMIN->>SPM: 該当ScorePostのis_flaggedを更新
+    SPM->>DB: UPDATE文発行(一括更新)
+    DB-->>SPM: 更新完了
+    SPM-->>SPADMIN: 完了を返す
+    SPADMIN-->>B: 完了メッセージ表示
+    B-->>A: 表示
+    Note over SPM,DB: is_flagged=trueの投稿は以後ランキング集計から自動除外
+
+    A->>B: 「ユーザー」一覧を選択し、悪質ユーザーにチェックを入れ「BAN」を実行
+    B->>UADMIN: POST(選択したid一覧、BANアクション)
+    UADMIN->>UM: 該当Userのis_bannedを更新
+    UM->>DB: UPDATE文発行
+    DB-->>UM: 更新完了
+    UM-->>UADMIN: 完了を返す
+    UADMIN-->>B: 完了メッセージ表示
+    B-->>A: 表示

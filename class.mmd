@@ -1,0 +1,53 @@
+classDiagram
+    class User {
+        +int id
+        +string username
+        +string email
+        +string password
+        +bool is_staff
+        +bool is_banned
+    }
+
+    class Character {
+        +int id
+        +string name
+        +string attribute
+    }
+
+    class Season {
+        +int id
+        +string name
+        +date start_date
+    }
+
+    class Boss {
+        +int id
+        +int season_id
+        +string name
+        +string recommended_attribute_1
+        +string recommended_attribute_2
+        +string non_recommended_attribute
+    }
+
+    class ScorePost {
+        +int id
+        +int user_id
+        +int boss_id
+        +int score
+        +int character1_id
+        +int character2_id
+        +int character3_id
+        +int mvp_character_id
+        +string screenshot_url
+        +datetime posted_at
+        +bool is_flagged
+        +bool is_hidden
+    }
+
+    Season "1" --> "*" Boss : 開催する
+    User "1" --> "*" ScorePost : 投稿する
+    Boss "1" --> "*" ScorePost : 対象とされる
+    Character "1" --> "*" ScorePost : キャラ1として使用される
+    Character "1" --> "*" ScorePost : キャラ2として使用される
+    Character "1" --> "*" ScorePost : キャラ3として使用される
+    Character "1" --> "*" ScorePost : MVPキャラとして使用される

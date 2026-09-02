@@ -1,0 +1,13 @@
+{% extends "ranking/base.html" %}
+
+{% block content %}
+<h2>サインアップ</h2>
+
+<div class="panel">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">登録する</button>
+    </form>
+</div>
+{% endblock %}

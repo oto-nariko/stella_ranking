@@ -1,0 +1,13 @@
+{% extends "ranking/base.html" %}
+
+{% block content %}
+<h2>投稿の削除確認</h2>
+
+<p>{{ object.boss.name }}への投稿(スコア:{{ object.score }})を削除します。よろしいですか？</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">削除する</button>
+</form>
+<a href="{% url 'ranking:mypage' %}">キャンセル</a>
+{% endblock %}

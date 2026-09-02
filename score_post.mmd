@@ -1,0 +1,57 @@
+sequenceDiagram
+    participant U as ユーザー
+    participant B as ブラウザ
+    participant PT as 投稿画面(post.html)
+    participant PV as ScorePostView
+    participant S as Supabase Storage
+    participant FORM as ScorePostForm
+    participant SPM as ScorePostモデル
+    participant DB as Supabase DB
+    participant HT as ホーム画面(home.html)
+
+    U->>B: 投稿画面にアクセス
+    B->>PV: GET /post
+    PV->>SPM: 選択肢用にキャラ一覧・ボス一覧を取得
+    SPM->>DB: SELECT文発行
+    DB-->>SPM: キャラ一覧・ボス一覧を返却
+    SPM-->>PV: 一覧を返す
+    PV->>PT: 投稿フォームを表示
+    PT-->>B: フォーム表示(スコア・キャラ選択・ボス選択・画像アップロード欄)
+    B-->>U: 表示
+
+    U->>B: 画像を選択
+    B->>B: 横幅1000px以下・JPEG80%に圧縮(JavaScript)
+    U->>B: スコア・使用キャラ1〜3・MVPキャラ・ボスを入力し送信
+
+    B->>S: 圧縮済み画像をアップロード
+    S-->>B: 画像URLを返却
+
+    B->>PV: POST /post (スコア・キャラ情報・ボス・画像URL)
+    PV->>FORM: 入力データをバリデーション
+    FORM->>FORM: スコアが数値か、MVPキャラが使用キャラ1〜3に含まれるか等をチェック
+
+    alt バリデーションエラー
+        FORM-->>PV: エラー内容を返す
+        PV->>PT: エラーメッセージ付きで再表示
+        PT-->>B: エラー表示
+        B-->>U: 表示
+    else バリデーションOK
+        PV->>SPM: 投稿者がBANされていないか確認
+        SPM->>DB: is_bannedを確認
+        DB-->>SPM: 結果を返却
+
+        alt BANされている
+            SPM-->>PV: 投稿不可を返す
+            PV->>PT: 「投稿が制限されています」と表示
+            PT-->>B: エラー表示
+            B-->>U: 表示
+        else BANされていない
+            PV->>SPM: ScorePostを新規作成
+            SPM->>DB: INSERT文発行
+            DB-->>SPM: 保存完了
+            SPM-->>PV: 保存成功を返す
+            PV->>HT: ホーム画面へリダイレクト
+            HT-->>B: 更新されたランキングを表示
+            B-->>U: 表示
+        end
+    end

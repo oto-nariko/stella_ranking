@@ -1,0 +1,89 @@
+{% extends "ranking/base.html" %}
+
+{% block content %}
+<h2>{{ season.name }} ランキング</h2>
+
+<div class="panel">
+    <form method="get">
+        <div>
+            <label for="season-select">シーズン</label>
+            <select name="season" id="season-select">
+                {% for s in all_seasons %}
+                <option value="{{ s.id }}" {% if s == season %}selected{% endif %}>{{ s.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label><input type="radio" name="boss" value="" {% if not selected_boss %}checked{% endif %}> 合算</label>
+            {% for boss in bosses %}
+            <label><input type="radio" name="boss" value="{{ boss.id }}" {% if selected_boss.id == boss.id %}checked{% endif %}> {{ boss.name }}</label>
+            {% endfor %}
+        </div>
+
+        <div>
+            <label>
+                <input type="checkbox" name="filter" value="non_recommended" {% if non_recommended_only %}checked{% endif %}>
+                推奨属性を使わなかった人だけ表示
+            </label>
+        </div>
+
+        <button type="submit">表示する</button>
+    </form>
+</div>
+
+{% if user.is_authenticated and my_rank %}
+<div class="panel my-rank-link">
+    <span>あなたの順位：<strong>{{ my_rank }}位</strong>（{{ my_score }}点）</span>
+    <a href="?{% if selected_boss %}boss={{ selected_boss.id }}&{% endif %}{% if not_recommended_only %}filter=non_recommended&{% endif %}page={{ my_page }}#my-row">見る</a>
+</div>
+{% endif %}
+
+<div class="table-wrap">
+<table>
+    <thead>
+        <tr>
+            <th>順位</th>
+            <th>ユーザー名</th>
+            <th>スコア</th>
+            {% if selected_boss %}
+            <th>詳細</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% if selected_boss %}
+            {% for ranked_user, post in page_obj %}
+            <tr class="{% if ranked_user == request.user %}my-row{% endif %}" {% if ranked_user == request.user %}id="my-row"{% endif %}>
+                <td>{{ forloop.counter0|add:rank_start }}</td>
+                <td>{{ ranked_user.display_name }}</td>
+                <td>{{ post.score }}</td>
+                <td><a href="{% url 'ranking:score_post_detail' post.id %}">詳細</a></td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            {% for ranked_user, score in page_obj %}
+            <tr class="{% if ranked_user == request.user %}my-row{% endif %}" {% if ranked_user == request.user %}id="my-row"{% endif %}>
+                <td>{{ forloop.counter0|add:rank_start }}</td>
+                <td>{{ ranked_user.display_name }}</td>
+                <td>{{ score }}</td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+    </tbody>
+</table>
+</div>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+    <a href="?{% if selected_boss %}boss={{ selected_boss.id }}&{% endif %}{% if not_recommended_only %}filter=non_recommended&{% endif %}page={{ page_obj.previous_page_number }}">前の100件</a>
+    {% endif %}
+
+    <span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }} ページ</span>
+
+    {% if page_obj.has_next %}
+    <a href="?{% if selected_boss %}boss={{ selected_boss.id }}&{% endif %}{% if not_recommended_only %}filter=non_recommended&{% endif %}page={{ page_obj.next_page_number }}">次の100件</a>
+    {% endif %}
+</div>
+
+{% endblock %}

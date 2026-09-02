@@ -1,0 +1,241 @@
+/* ==========================
+   変数・リセット
+========================== */
+:root {
+    --color-navy: #2E5C8A;
+    --color-purple: #6FA8DC;
+    --color-lavender: #F5F9FF;
+    --color-gold: #F5C86B;
+    --color-white: #FFFFFF;
+    --color-gray-text: #5C6B7A;
+    --color-danger: #C0392B;
+
+    --radius: 10px;
+    --spacing: 16px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
+    background-color: var(--color-lavender);
+    color: var(--color-navy);
+    line-height: 1.6;
+}
+
+a {
+    color: var(--color-navy);
+    text-decoration: none;
+}
+
+/* ==========================
+   ヘッダー
+========================== */
+header {
+    background-color: var(--color-navy);
+    color: var(--color-white);
+    padding: 12px var(--spacing);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+header h1 {
+    font-size: 16px;
+    margin: 0 0 8px 0;
+}
+
+header h1 a {
+    color: var(--color-white);
+}
+
+header nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+}
+
+header nav span {
+    color: var(--color-gold);
+    font-weight: bold;
+}
+
+header nav a {
+    color: var(--color-white);
+    opacity: 0.9;
+}
+
+header nav form button {
+    background: none;
+    border: none;
+    color: var(--color-white);
+    opacity: 0.9;
+    font-size: 13px;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* ==========================
+   本文レイアウト
+========================== */
+main {
+    padding: var(--spacing);
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+h2 {
+    font-size: 19px;
+    margin-top: 0;
+}
+
+footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--color-gray-text);
+    padding: 24px var(--spacing);
+}
+
+/* ==========================
+   ボタン
+========================== */
+button,
+input[type="submit"] {
+    background-color: var(--color-gold);
+    color: var(--color-navy);
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:active {
+    opacity: 0.85;
+}
+
+/* ==========================
+   フォーム
+========================== */
+form p {
+    margin: 0 0 14px 0;
+}
+
+form label {
+    display: block;
+    font-size: 13px;
+    color: var(--color-gray-text);
+    margin-bottom: 4px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cfc9e6;
+    border-radius: var(--radius);
+    font-size: 14px;
+    background-color: var(--color-white);
+    color: var(--color-navy);
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 6px;
+}
+
+/* ==========================
+   カード風の白箱（フォーム全体・詳細画面など）
+========================== */
+.panel {
+    background-color: var(--color-white);
+    border-radius: var(--radius);
+    padding: var(--spacing);
+    box-shadow: 0 2px 8px rgba(36, 30, 78, 0.08);
+    margin-bottom: var(--spacing);
+}
+
+/* ==========================
+   テーブル（横スクロール対応）
+========================== */
+.table-wrap {
+    overflow-x: auto;
+    background-color: var(--color-white);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 8px rgba(36, 30, 78, 0.08);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+th,
+td {
+    padding: 10px 12px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid #e6e2f5;
+}
+
+thead th {
+    background-color: var(--color-purple);
+    color: var(--color-white);
+    font-weight: normal;
+    font-size: 12px;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ==========================
+   ページネーション
+========================== */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--color-gray-text);
+}
+
+.pagination a {
+    color: var(--color-navy);
+    font-weight: bold;
+}
+
+/* ==========================
+   自分の順位（強調・ジャンプリンク）
+========================== */
+.my-rank-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.my-rank-link a {
+    background-color: var(--color-gold);
+    color: var(--color-navy);
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.my-row {
+    background-color: #FFF3D6;
+    font-weight: bold;
+}

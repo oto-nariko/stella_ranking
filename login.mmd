@@ -1,0 +1,45 @@
+sequenceDiagram
+    participant U as ユーザー
+    participant B as ブラウザ
+    participant LT as ログイン画面(login.html)
+    participant LV as LoginView
+    participant AUTH as authenticate()
+    participant UM as Userモデル
+    participant DB as Supabase DB
+    participant MP as マイページ画面(mypage.html)
+
+    U->>B: サイトにアクセスする
+    B->>LV: GET /login
+    LV->>LT: ログイン画面を表示
+    LT-->>B: ログインフォーム表示
+    B-->>U: 画面を表示
+
+    U->>B: ID・パスワードを入力しログインボタン押下
+    B->>LV: POST /login (ID, パスワード)
+
+    alt IDまたはパスワードが未入力
+        LV->>LT: 「未入力です」とエラーメッセージ付きで再表示
+        LT-->>B: エラー表示
+        B-->>U: 表示
+    else 入力あり
+        LV->>AUTH: authenticate(ID, パスワード)
+        AUTH->>UM: 該当ユーザーを検索
+        UM->>DB: SELECT文発行
+        DB-->>UM: ユーザーデータ返却
+        UM-->>AUTH: ユーザー情報を返す
+        AUTH->>AUTH: パスワードのハッシュ値を照合
+
+        alt ID・パスワードが一致しない
+            AUTH-->>LV: 認証失敗(None)を返す
+            LV->>LT: 「IDまたはパスワードが違います」と表示
+            LT-->>B: エラー表示
+            B-->>U: 表示
+        else 認証成功
+            AUTH-->>LV: ユーザーオブジェクトを返す
+            LV->>DB: セッションにユーザー情報を格納
+            DB-->>LV: 保存完了
+            LV->>MP: マイページへリダイレクト
+            MP-->>B: マイページ表示
+            B-->>U: 表示
+        end
+    end
