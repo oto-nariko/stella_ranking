@@ -4,7 +4,8 @@
 <h2>マイページ</h2>
 <p>{{ user.display_name }}さんの投稿一覧</p>
 
-<table>
+<div class="table-wrap">
+<table class="mypage-table">
     <thead>
         <tr>
             <th>ボス</th>
@@ -17,18 +18,19 @@
     <tbody>
         {% for post in posts %}
         <tr>
-            <td>{{ post.boss.name }}</td>
-            <td>{{ post.score }}</td>
-            <td>{{ post.posted_at }}</td>
-            <td>
+            <td data-label="ボス">{{ post.boss.name }}</td>
+            <td data-label="スコア">{{ post.score }}</td>
+            <td data-label="投稿日時">{{ post.posted_at }}</td>
+            <td data-label="状態">
                 {% if post.is_flagged %}不正フラグ有{% elif post.is_hidden %}非表示{% else %}公開中{% endif %}
             </td>
-            <td>
-                <a href="{% url 'ranking:score_post_detail' post.id %}">詳細</a>
-                <a href="{% url 'ranking:score_post_delete' post.id %}">削除</a>
+            <td data-label="" class="action-cell">
+                <a href="{% url 'ranking:score_post_detail' post.id %}" class="btn-small btn-detail">詳細</a>
+                <a href="{% url 'ranking:score_post_delete' post.id %}" class="btn-small btn-delete">削除</a>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock %}

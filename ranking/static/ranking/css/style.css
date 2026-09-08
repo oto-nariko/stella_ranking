@@ -313,3 +313,68 @@ tbody tr:last-child td {
     font-size: 13px;
     color: var(--color-gray-text);
 }
+
+/* ==========================
+   マイページ：スマホ幅ではカード表示に切り替え
+========================== */
+@media (max-width: 480px) {
+    .mypage-table thead {
+        display: none;
+    }
+
+    .mypage-table,
+    .mypage-table tbody,
+    .mypage-table tr,
+    .mypage-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .mypage-table tr {
+        border-bottom: 1px solid #e6e2f5;
+        padding: 10px 0;
+    }
+
+    .mypage-table td {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 12px;
+        border: none;
+        white-space: normal;
+    }
+
+    .mypage-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: var(--color-gray-text);
+        margin-right: 12px;
+    }
+
+    .mypage-table .action-cell {
+        justify-content: flex-end;
+        gap: 6px;
+    }
+}
+
+/* ==========================
+   マイページ：操作ボタン
+========================== */
+.btn-small {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-right: 6px;
+}
+
+.btn-detail {
+    background-color: var(--color-lavender);
+    color: var(--color-navy);
+    border: 1px solid var(--color-purple);
+}
+
+.btn-delete {
+    background-color: var(--color-white);
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger);
+}
