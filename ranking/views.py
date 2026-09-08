@@ -141,3 +141,8 @@ class ScorePostDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return ScorePost.objects.filter(user=self.request.user)
+
+
+class LogoutConfirmView(LoginRequiredMixin, TemplateView):
+    template_name = "ranking/logout_confirm.html"
+    login_url = "ranking:login"

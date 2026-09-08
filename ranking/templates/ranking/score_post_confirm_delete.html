@@ -3,11 +3,15 @@
 {% block content %}
 <h2>投稿の削除確認</h2>
 
+<div class="panel">
 <p>{{ object.boss.name }}への投稿(スコア:{{ object.score }})を削除します。よろしいですか？</p>
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">削除する</button>
-</form>
-<a href="{% url 'ranking:mypage' %}">キャンセル</a>
+<div class="confirm-actions">
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">削除する</button>
+    </form>
+    <a href="{% url 'ranking:mypage' %}" class="cancel-link">キャンセル</a>
+</div>
+</div>
 {% endblock %}

@@ -1,0 +1,17 @@
+{% extends "ranking/base.html" %}
+
+{% block content %}
+<h2>ログアウト確認</h2>
+
+<div class="panel">
+<p>ログアウトしますか？</p>
+
+<div class="confirm-actions">
+    <form method="post" action="{% url 'ranking:logout' %}">
+        {% csrf_token %}
+        <button type="submit">ログアウトする</button>
+    </form>
+    <a href="{% url 'ranking:home' %}" class="cancel-link">キャンセル</a>
+</div>
+</div>
+{% endblock %}
