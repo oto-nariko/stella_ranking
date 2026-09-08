@@ -241,7 +241,7 @@ tbody tr:last-child td {
 }
 
 /* ==========================
-   属性絞り込みボタン
+   投稿：属性絞り込みボタン
 ========================== */
 .attribute-filter-wrapper {
     margin-bottom: 16px;
@@ -275,4 +275,22 @@ tbody tr:last-child td {
     background-color: var(--color-gold);
     border-color: var(--color-gold);
     font-weight: bold;
+}
+
+/* ==========================
+   ホーム画面：属性フィルタ（行分け）
+========================== */
+.filter-heading {
+    display: block;
+    font-size: 13px;
+    color: var(--color-gray-text);
+    margin-bottom: 6px;
+}
+
+.radio-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    margin-bottom: 8px;
+    font-size: 13px;
 }

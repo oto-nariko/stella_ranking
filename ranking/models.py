@@ -138,17 +138,22 @@ class ScorePost(models.Model):
         return {1: self.character_1, 2: self.character_2, 3: self.character_3}[self.mvp_slot]
 
     @classmethod
-    def get_boss_ranking(cls, boss, not_recommended_only=False):
+    def get_boss_ranking(cls, boss, attribute_filter=None):
         """
         指定したボスのランキングを、ユーザーごとの最高スコアの投稿で降順に返す。
-        not_recommended_only=True の場合、MVPキャラが推奨属性でない投稿のみ対象にする。
+        attribute_filter:
+            None                → 絞り込みなし（全属性対象）
+            "not_recommended"   → MVPキャラが推奨属性でない投稿のみ対象
+            "fire"などの属性コード → MVPキャラがその属性の投稿のみ対象
         戻り値: [(CustomUser, ScorePost), ...] のリスト
         """
         posts = cls.objects.filter(boss=boss, is_flagged=False, is_hidden=False)
 
-        if not_recommended_only:
+        if attribute_filter == "not_recommended":
             recommended = [boss.recommended_attribute_1, boss.recommended_attribute_2]
             posts = [p for p in posts if p.mvp_character.attribute not in recommended]
+        elif attribute_filter:
+            posts = [p for p in posts if p.mvp_character.attribute == attribute_filter]
 
         best_posts = {}
         for p in posts:
@@ -158,11 +163,10 @@ class ScorePost(models.Model):
         return sorted(best_posts.items(), key=lambda item: item[1].score, reverse=True)
 
     @classmethod
-    def get_combined_ranking(cls, season, not_recommended_only=False):
+    def get_combined_ranking(cls, season, attribute_filter=None):
         """
         指定したシーズンの全ボスについて、ユーザーごとの合算スコアを降順で返す。
         未投稿のボスは0点として扱う。
-        戻り値: [(CustomUser, 合算スコア), ...] のリスト
         """
         bosses = season.bosses.all()
 
@@ -170,7 +174,7 @@ class ScorePost(models.Model):
         for boss in bosses:
             ranking = {
                 user: post.score
-                for user, post in cls.get_boss_ranking(boss, not_recommended_only=not_recommended_only)
+                for user, post in cls.get_boss_ranking(boss, attribute_filter=attribute_filter)
             }
             per_boss_scores.append(ranking)
 

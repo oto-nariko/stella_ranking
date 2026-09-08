@@ -22,10 +22,18 @@
         </div>
 
         <div>
-            <label>
-                <input type="checkbox" name="filter" value="non_recommended" {% if non_recommended_only %}checked{% endif %}>
-                推奨属性を使わなかった人だけ表示
-            </label>
+            <label class="filter-heading">属性で絞り込む</label>
+
+            <div class="radio-row">
+                <label><input type="radio" name="attribute" value="" {% if not attribute_filter %}checked{% endif %}> すべて</label>
+                <label><input type="radio" name="attribute" value="not_recommended" {% if attribute_filter == "not_recommended" %}checked{% endif %}> 推奨属性を使わなかった人</label>
+            </div>
+
+            <div class="radio-row">
+                {% for value, label in attribute_choices %}
+                <label><input type="radio" name="attribute" value="{{ value }}" {% if attribute_filter == value %}checked{% endif %}> {{ label }}</label>
+                {% endfor %}
+            </div>
         </div>
 
         <button type="submit">表示する</button>
@@ -35,7 +43,7 @@
 {% if user.is_authenticated and my_rank %}
 <div class="panel my-rank-link">
     <span>あなたの順位：<strong>{{ my_rank }}位</strong>（{{ my_score }}点）</span>
-    <a href="?{% if selected_boss %}boss={{ selected_boss.id }}&{% endif %}{% if not_recommended_only %}filter=non_recommended&{% endif %}page={{ my_page }}#my-row">見る</a>
+    <a href="?{% if selected_boss %}boss={{ selected_boss.id }}&{% endif %}{% if attribute_filter %}attribute={{ attribute_filter }}&{% endif %}page={{ my_page }}#my-row">見る</a>
 </div>
 {% endif %}
 
@@ -76,13 +84,13 @@
 
 <div class="pagination">
     {% if page_obj.has_previous %}
-    <a href="?{% if selected_boss %}boss={{ selected_boss.id }}&{% endif %}{% if not_recommended_only %}filter=non_recommended&{% endif %}page={{ page_obj.previous_page_number }}">前の100件</a>
+    <a href="?{% if selected_boss %}boss={{ selected_boss.id }}&{% endif %}{% if attribute_filter %}attribute={{ attribute_filter }}&{% endif %}page={{ page_obj.previous_page_number }}">前の100件</a>
     {% endif %}
 
     <span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }} ページ</span>
 
     {% if page_obj.has_next %}
-    <a href="?{% if selected_boss %}boss={{ selected_boss.id }}&{% endif %}{% if not_recommended_only %}filter=non_recommended&{% endif %}page={{ page_obj.next_page_number }}">次の100件</a>
+    <a href="?{% if selected_boss %}boss={{ selected_boss.id }}&{% endif %}{% if attribute_filter %}attribute={{ attribute_filter }}&{% endif %}page={{ page_obj.next_page_number }}">次の100件</a>
     {% endif %}
 </div>
 

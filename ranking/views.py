@@ -13,6 +13,16 @@ from django.conf import settings
 
 class HomeView(TemplateView):
     template_name = "ranking/home.html"
+    PAGE_SIZE = 100
+
+    ATTRIBUTE_CHOICES = [
+        ("fire", "火"),
+        ("water", "水"),
+        ("wind", "風"),
+        ("light", "光"),
+        ("dark", "闇"),
+        ("earth", "地"),
+    ]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -26,9 +36,10 @@ class HomeView(TemplateView):
         context["season"] = current_season
         context["all_seasons"] = Season.objects.all()
         context["bosses"] = current_season.bosses.all() if current_season else []
+        context["attribute_choices"] = self.ATTRIBUTE_CHOICES
 
-        not_recommended_only = self.request.GET.get("filter") == "non_recommended"
-        context["not_recommended_only"] = not_recommended_only
+        attribute_filter = self.request.GET.get("attribute") or None
+        context["attribute_filter"] = attribute_filter
 
         boss_id = self.request.GET.get("boss")
         selected_boss = None
@@ -40,20 +51,18 @@ class HomeView(TemplateView):
             full_ranking = []
         elif selected_boss:
             full_ranking = ScorePost.get_boss_ranking(
-                selected_boss, not_recommended_only=not_recommended_only
+                selected_boss, attribute_filter=attribute_filter
             )
         else:
             full_ranking = ScorePost.get_combined_ranking(
-                current_season, not_recommended_only=not_recommended_only
+                current_season, attribute_filter=attribute_filter
             )
 
-        # ここからページネーション（100件ごと）
-        paginator = Paginator(full_ranking, 100)
+        paginator = Paginator(full_ranking, self.PAGE_SIZE)
         page_number = self.request.GET.get("page", 1)
         page_obj = paginator.get_page(page_number)
 
         context["page_obj"] = page_obj
-        # 「順位」は現在のページの何行目か、ではなく全体の中の順位なので、開始位置を渡す
         context["rank_start"] = page_obj.start_index()
 
         my_rank = None
@@ -65,7 +74,7 @@ class HomeView(TemplateView):
                     my_score = value.score if selected_boss else value
                     break
         context["my_rank"] = my_rank
-        context["my_page"] = ((my_rank - 1) // 100) + 1 if my_rank else None
+        context["my_page"] = ((my_rank - 1) // self.PAGE_SIZE) + 1 if my_rank else None
         context["my_score"] = my_score
 
         return context
