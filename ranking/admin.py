@@ -29,7 +29,7 @@ class CustomUserAdmin(admin.ModelAdmin):
 """
 @admin.register(ScorePost)
 class ScorePostAdmin(admin.ModelAdmin):
-    list_display = ["user", "boss", "score", "screenshot_thumbnails", "is_flagged", "is_hidden", "posted_at"]
+    list_display = ["user", "boss", "score", "screenshot_thumbnails", "report_count", "is_flagged", "is_hidden", "posted_at"]
     list_filter = ["is_flagged", "is_hidden", "boss"]
     actions = ["mark_as_flagged", "unmark_as_flagged"]
 
@@ -41,6 +41,13 @@ class ScorePostAdmin(admin.ModelAdmin):
             obj.damage_stats_screenshot_url,
         )
     screenshot_thumbnails.short_description = "証拠スクショ（左:スコア／右:ダメージ統計）"
+
+    def report_count(self, obj):
+        count = obj.reports.count()
+        if count >= 5:
+            return format_html('<span style="color: red; font-weight: bold;">{}件</span>', count)
+        return f"{count}件"
+    report_count.short_description = "通報数"
 
     @admin.action(description="選択した投稿に不正フラグを立てる")
     def mark_as_flagged(self, request, queryset):

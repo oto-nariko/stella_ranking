@@ -23,10 +23,18 @@
     </nav>
 </header>
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+<main>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <p class="message-{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+</main>
 
     <footer>
         <p>&copy; 2026 ステラソラ非公式ランキング</p>

@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView, DetailView, CreateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from .forms import SignUpForm, ScorePostForm
-from .models import Season, Boss, ScorePost, Character
+from .models import Season, Boss, ScorePost, Character, Report
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
 from django.contrib import messages
@@ -9,7 +9,8 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, DeleteView
 from django.core.paginator import Paginator
 from django.conf import settings
-
+from django.http import HttpResponseRedirect
+from django.views import View
 
 class HomeView(TemplateView):
     template_name = "ranking/home.html"
@@ -146,3 +147,14 @@ class ScorePostDeleteView(LoginRequiredMixin, DeleteView):
 class LogoutConfirmView(LoginRequiredMixin, TemplateView):
     template_name = "ranking/logout_confirm.html"
     login_url = "ranking:login"
+
+
+class ReportCreateView(LoginRequiredMixin, View):
+    login_url = "ranking:login"
+
+    def post(self, request, pk):
+        score_post = ScorePost.objects.filter(pk=pk).first()
+        if score_post:
+            Report.objects.get_or_create(user=request.user, score_post=score_post)
+            messages.success(request, "通報しました。")
+        return HttpResponseRedirect(reverse("ranking:score_post_detail", kwargs={"pk": pk}))

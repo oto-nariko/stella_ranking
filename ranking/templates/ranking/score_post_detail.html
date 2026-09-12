@@ -50,5 +50,12 @@
     <img src="{{ post.damage_stats_screenshot_url }}" alt="ダメージ統計画面" style="max-width: 100%;">
 </div>
 
+<div class="panel">
+    <form method="post" action="{% url 'ranking:score_post_report' post.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-report">この投稿を通報する</button>
+    </form>
+</div>
+
 <p><a href="{% url 'ranking:home' %}">ランキングへ戻る</a></p>
 {% endblock %}

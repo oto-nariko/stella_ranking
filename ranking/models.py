@@ -208,3 +208,23 @@ class ScorePost(models.Model):
         verbose_name_plural = "スコア投稿"
         ordering = ["-posted_at"]  # 投稿日時が新しい順に並べる
 
+
+class Report(models.Model):
+    """
+    通報のモデル
+    """
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="reports", verbose_name="通報者"
+    )
+    score_post = models.ForeignKey(
+        ScorePost, on_delete=models.CASCADE, related_name="reports", verbose_name="通報対象の投稿"
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="通報日時")
+
+    def __str__(self):
+        return f"{self.user} → {self.score_post}"
+
+    class Meta:
+        verbose_name = "通報"
+        verbose_name_plural = "通報"
+        unique_together = ["user", "score_post"]

@@ -14,4 +14,5 @@ urlpatterns = [
     path("post/new/", views.ScorePostCreateView.as_view(), name="score_post_create"),
     path("mypage/", views.MyPageView.as_view(), name="mypage"),
     path("post/<int:pk>/delete/", views.ScorePostDeleteView.as_view(), name="score_post_delete"),
+    path("post/<int:pk>/report/", views.ReportCreateView.as_view(), name="score_post_report"),
 ]
