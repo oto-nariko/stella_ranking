@@ -394,3 +394,42 @@ tbody tr:last-child td {
     color: var(--color-gray-text);
     margin-bottom: 20px;
 }
+
+/* すべてのプレースホルダーの文字色と透明度を調整 */
+::placeholder {
+  color: #a0a0a0;
+  opacity: 1;
+  font-weight: normal;
+}
+
+/* ブラウザ別の互換性対策 */
+::-webkit-input-placeholder {
+  color: #a0a0a0;
+}
+:-ms-input-placeholder {
+  color: #a0a0a0;
+}
+
+/* ==========================
+   投稿詳細画面
+========================== */
+.detail-section {
+    margin-bottom: 12px;
+}
+
+.detail-section h3 {
+    font-size: 14px;
+    color: var(--color-purple);
+    margin: 0 0 10px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e6e2f5;
+}
+
+.detail-section p {
+    margin: 6px 0;
+}
+
+.detail-section img {
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+}

@@ -121,6 +121,20 @@ class ScorePost(models.Model):
     mvp_slot = models.PositiveSmallIntegerField(
         choices=MVP_SLOT_CHOICES, verbose_name="MVPキャラの枠"
     )
+    character_1_limit_break = models.PositiveSmallIntegerField(
+        null=True, blank=True, verbose_name="使用キャラ1の凸数(任意)"
+    )
+    character_2_limit_break = models.PositiveSmallIntegerField(
+        null=True, blank=True, verbose_name="使用キャラ2の凸数(任意)"
+    )
+    character_3_limit_break = models.PositiveSmallIntegerField(
+        null=True, blank=True, verbose_name="使用キャラ3の凸数(任意)"
+    )
+    badges_note = models.TextField(blank=True, verbose_name="徽章（任意）")
+    disc_note = models.TextField(blank=True, verbose_name="ロスレコ（任意）")
+    preset_code = models.CharField(
+        max_length=100, blank=True, verbose_name="記録プリセットコード（任意）"
+    )
 
     screenshot_url = models.URLField(verbose_name="最終スコア画面のスクショURL")
     damage_stats_screenshot_url = models.URLField(verbose_name="ダメージ統計画面のスクショURL")

@@ -3,22 +3,52 @@
 {% block content %}
 <h2>投稿詳細</h2>
 
-<p>投稿者：{{ post.user.display_name }}</p>
-<p>ボス：{{ post.boss.name }}</p>
-<p>スコア：{{ post.score }}</p>
+<div class="panel detail-section">
+    <h3>基本情報</h3>
+    <p>投稿者：{{ post.user.display_name }}</p>
+    <p>ボス：{{ post.boss.name }}</p>
+    <p>スコア：{{ post.score }}</p>
+</div>
 
-<p>使用キャラ：
-    {{ post.character_1.name }}（{{ post.character_1.get_attribute_display }}）,
-    {{ post.character_2.name }}（{{ post.character_2.get_attribute_display }}）,
-    {{ post.character_3.name }}（{{ post.character_3.get_attribute_display }}）
-</p>
-<p>MVPキャラ：{{ post.mvp_character.name }}</p>
+<div class="panel detail-section">
+    <h3>使用編成</h3>
+    <p>使用キャラ：
+        {{ post.character_1.name }}（{{ post.character_1.get_attribute_display }}）,
+        {{ post.character_2.name }}（{{ post.character_2.get_attribute_display }}）,
+        {{ post.character_3.name }}（{{ post.character_3.get_attribute_display }}）
+    </p>
+    <p>MVPキャラ：{{ post.mvp_character.name }}</p>
+    <p>
+        キャラ凸数：
+        {{ post.character_1.name }}（{% if post.character_1_limit_break is not None %}{{ post.character_1_limit_break }}凸{% else %}未設定{% endif %}）,
+        {{ post.character_2.name }}（{% if post.character_2_limit_break is not None %}{{ post.character_2_limit_break }}凸{% else %}未設定{% endif %}）,
+        {{ post.character_3.name }}（{% if post.character_3_limit_break is not None %}{{ post.character_3_limit_break }}凸{% else %}未設定{% endif %}）
+    </p>
+</div>
 
-<p>最終スコア画面：</p>
-<img src="{{ post.screenshot_url }}" alt="最終スコア画面" style="max-width: 100%;">
+{% if post.badges_note or post.disc_note or post.preset_code %}
+<div class="panel detail-section">
+    <h3>装備・記録情報</h3>
+    {% if post.badges_note %}
+    <p>徽章：{{ post.badges_note|linebreaksbr }}</p>
+    {% endif %}
+    {% if post.disc_note %}
+    <p>ロスレコ／Disc：{{ post.disc_note|linebreaksbr }}</p>
+    {% endif %}
+    {% if post.preset_code %}
+    <p>星ノ塔プリセットコード：{{ post.preset_code }}</p>
+    {% endif %}
+</div>
+{% endif %}
 
-<p>ダメージ統計画面：</p>
-<img src="{{ post.damage_stats_screenshot_url }}" alt="ダメージ統計画面" style="max-width: 100%;">
+<div class="panel detail-section">
+    <h3>証拠画像</h3>
+    <p>最終スコア画面：</p>
+    <img src="{{ post.screenshot_url }}" alt="最終スコア画面" style="max-width: 100%;">
+
+    <p>ダメージ統計画面：</p>
+    <img src="{{ post.damage_stats_screenshot_url }}" alt="ダメージ統計画面" style="max-width: 100%;">
+</div>
 
 <p><a href="{% url 'ranking:home' %}">ランキングへ戻る</a></p>
 {% endblock %}
