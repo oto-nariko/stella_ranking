@@ -32,7 +32,7 @@ class HomeView(TemplateView):
         if season_id:
             current_season = Season.objects.filter(id=season_id).first()
         else:
-            current_season = Season.objects.first()
+            current_season = Season.get_current_season()
 
         context["season"] = current_season
         context["all_seasons"] = Season.objects.all()
@@ -122,6 +122,18 @@ class ScorePostCreateView(LoginRequiredMixin, CreateView):
         context["supabase_url"] = settings.SUPABASE_URL
         context["supabase_key"] = settings.SUPABASE_PUBLISHABLE_KEY
         return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.is_banned:
+            messages.error(request, "投稿が制限されています。")
+            return redirect("ranking:home")
+
+        current_season = Season.get_current_season()
+        if not current_season or not current_season.is_open_for_submission():
+            messages.error(request, "現在のシーズンは投稿受付期間外です。")
+            return redirect("ranking:home")
+
+        return super().dispatch(request, *args, **kwargs)
 
 
 class MyPageView(LoginRequiredMixin, ListView):

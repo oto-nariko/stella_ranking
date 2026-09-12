@@ -56,7 +56,7 @@ class ScorePostForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        current_season = Season.objects.first()
+        current_season = Season.get_current_season()
         if current_season:
             self.fields["boss"].queryset = current_season.bosses.all()
 

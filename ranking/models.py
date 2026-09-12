@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from datetime import datetime
+from django.utils import timezone
+
 
 
 class CustomUser(AbstractUser):
@@ -58,6 +61,26 @@ class Season(models.Model):
         verbose_name = "シーズン"
         verbose_name_plural = "シーズン"
         ordering = ["-start_date"]  # 開始日が新しい順に並べる
+
+    @property
+    def submission_deadline(self):
+        """このシーズンの投稿締切日時（開始月の翌月1日 午前5時）を返す"""
+        year = self.start_date.year
+        month = self.start_date.month + 1
+        if month > 12:
+            month = 1
+            year += 1
+        naive_deadline = datetime(year, month, 1, 5, 0, 0)
+        return timezone.make_aware(naive_deadline)
+
+    def is_open_for_submission(self):
+        """現在、このシーズンへの投稿がまだ受け付けられるかどうか"""
+        return timezone.now() <= self.submission_deadline
+
+    @classmethod
+    def get_current_season(cls):
+        """現在の日付時点で、開始しているシーズンの中で一番新しいものを返す"""
+        return cls.objects.filter(start_date__lte=timezone.now().date()).first()
 
 
 class Boss(models.Model):
