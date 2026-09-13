@@ -170,3 +170,7 @@ class ReportCreateView(LoginRequiredMixin, View):
             Report.objects.get_or_create(user=request.user, score_post=score_post)
             messages.success(request, "通報しました。")
         return HttpResponseRedirect(reverse("ranking:score_post_detail", kwargs={"pk": pk}))
+
+
+class NoticeView(TemplateView):
+    template_name = "ranking/notice.html"

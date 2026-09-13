@@ -7,6 +7,9 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
+        <p class="agreement-note">
+            登録することで、<a href="{% url 'ranking:notice' %}" target="_blank" rel="noopener noreferrer">利用上の注意事項</a>に同意したものとみなします。
+        </p>
         <button type="submit">登録する</button>
     </form>
 </div>

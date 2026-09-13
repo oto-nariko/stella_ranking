@@ -466,3 +466,34 @@ tbody tr:last-child td {
     background-color: #FBE3E1;
     color: var(--color-danger);
 }
+/* ==========================
+   フッター
+========================== */
+footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--color-gray-text);
+    padding: 24px var(--spacing);
+}
+
+footer a {
+    color: var(--color-purple);
+}
+
+footer p {
+    margin: 4px 0;
+}
+
+/* ==========================
+   同意事項の注意書き
+========================== */
+.agreement-note {
+    font-size: 12px;
+    color: var(--color-gray-text);
+    margin: 12px 0;
+}
+
+.agreement-note a {
+    color: var(--color-purple);
+    text-decoration: underline;
+}
