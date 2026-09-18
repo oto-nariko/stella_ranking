@@ -142,7 +142,7 @@ class ScorePost(models.Model):
         Character, on_delete=models.PROTECT, related_name="+", verbose_name="使用キャラ3"
     )
     mvp_slot = models.PositiveSmallIntegerField(
-        choices=MVP_SLOT_CHOICES, verbose_name="MVPキャラの枠"
+        choices=MVP_SLOT_CHOICES, verbose_name="最多ダメージキャラ"
     )
     character_1_limit_break = models.PositiveSmallIntegerField(
         null=True, blank=True, verbose_name="使用キャラ1の凸数(任意)"

@@ -97,12 +97,6 @@ class ScorePostCreateView(LoginRequiredMixin, CreateView):
     template_name = "ranking/score_post_form.html"
     login_url = "ranking:login"
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.is_banned:
-            messages.error(request, "投稿が制限されています。")
-            return redirect("ranking:home")
-        return super().dispatch(request, *args, **kwargs)
-
     def form_valid(self, form):
         form.instance.user = self.request.user
         form.instance.screenshot_url = self.request.POST.get("screenshot_url")
