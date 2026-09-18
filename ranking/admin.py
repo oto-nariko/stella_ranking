@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Count
 from django.utils.html import format_html
 from .models import Character, Season, Boss, CustomUser, ScorePost
 
@@ -33,6 +34,10 @@ class ScorePostAdmin(admin.ModelAdmin):
     list_filter = ["is_flagged", "is_hidden", "boss"]
     actions = ["mark_as_flagged", "unmark_as_flagged"]
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(reports_count_annotated=Count('reports'))
+
     def screenshot_thumbnails(self, obj):
         return format_html(
             '<img src="{}" style="height: 60px; margin-right: 4px;" />'
@@ -43,11 +48,12 @@ class ScorePostAdmin(admin.ModelAdmin):
     screenshot_thumbnails.short_description = "証拠スクショ（左:スコア／右:ダメージ統計）"
 
     def report_count(self, obj):
-        count = obj.reports.count()
+        count = getattr(obj, 'reports_count_annotated', obj.reports.count())
         if count >= 5:
             return format_html('<span style="color: red; font-weight: bold;">{}件</span>', count)
         return f"{count}件"
     report_count.short_description = "通報数"
+    report_count.admin_order_field = "reports_count_annotated"
 
     @admin.action(description="選択した投稿に不正フラグを立てる")
     def mark_as_flagged(self, request, queryset):
