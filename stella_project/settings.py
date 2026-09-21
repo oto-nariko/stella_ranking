@@ -133,6 +133,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static',]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 AUTH_USER_MODEL = 'ranking.CustomUser'  # カスタムユーザーモデルを使用する場合の設定
 
 LOGIN_REDIRECT_URL = "ranking:home"
@@ -145,3 +146,5 @@ CSRF_TRUSTED_ORIGINS = [
     'https://*.ngrok-free.app',
     'https://*.ngrok.io',
 ]
+
+ADMIN_URL = os.environ.get('DJANGO_ADMIN_URL', 'admin/')

@@ -1,10 +1,13 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from . import views
+from django.conf import settings
+from django.contrib import admin
 
 app_name = "ranking"
 
 urlpatterns = [
+    path(settings.ADMIN_URL, admin.site.urls),
     path("", views.HomeView.as_view(), name="home"),
     path("post/<int:pk>/", views.ScorePostDetailView.as_view(), name="score_post_detail"),
     path("login/", auth_views.LoginView.as_view(template_name="ranking/login.html"), name="login"),
