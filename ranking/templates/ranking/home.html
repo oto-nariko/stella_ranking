@@ -67,7 +67,7 @@
                 <td>{{ forloop.counter0|add:rank_start }}</td>
                 <td>{{ ranked_user.display_name }}</td>
                 <td>{{ post.score|intcomma }}</td>
-                <td><a href="{% url 'ranking:score_post_detail' post.id %}">詳細</a></td>
+                <td><a href="{% url 'ranking:score_post_detail' post.id %}?back={{ back_to_ranking|urlencode }}">詳細</a></td>
             </tr>
             {% endfor %}
         {% else %}

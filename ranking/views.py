@@ -78,6 +78,15 @@ class HomeView(TemplateView):
         context["my_page"] = ((my_rank - 1) // self.PAGE_SIZE) + 1 if my_rank else None
         context["my_score"] = my_score
 
+        query_params = []
+        if season_id:
+            query_params.append(f"season={season_id}")
+        if boss_id:
+            query_params.append(f"boss={boss_id}")
+        if attribute_filter:
+            query_params.append(f"attribute={attribute_filter}")
+        context["back_to_ranking"] = "?" + "&".join(query_params) if query_params else ""
+
         return context
 
 class ScorePostDetailView(DetailView):

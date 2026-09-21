@@ -58,5 +58,5 @@
     </form>
 </div>
 
-<p><a href="{% url 'ranking:home' %}">ランキングへ戻る</a></p>
+<p><a href="{% url 'ranking:home' %}{{ request.GET.back }}">ランキングへ戻る</a></p>
 {% endblock %}
