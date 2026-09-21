@@ -76,26 +76,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
     filterButtons.forEach(button => {
         button.addEventListener("click", function() {
+            filterButtons.forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
 
-        filterButtons.forEach(btn => btn.classList.remove("active"));
-        this.classList.add("active");
+            const selectedAttr = this.getAttribute("data-attr");
 
-        const selectedAttr = this.getAttribute("data-attr");
+            charSelects.forEach(select => {
+                const currentValue = select.value;
 
-        charSelects.forEach(select => {
-            Array.from(select.options).forEach(option => {
-            if (!option.value) return;
+                Array.from(select.options).forEach(option => {
+                    if (!option.value) return;
 
-            const charAttr = charAttrMap[option.value];
-            if (selectedAttr === "all" || charAttr === selectedAttr) {
-                option.style.display = "";
-                option.disabled = false;
-            } else {
-                option.style.display = "none";
-                option.disabled = true;
-            }
+                    const charAttr = charAttrMap[option.value];
+                    if (selectedAttr === "all" || charAttr === selectedAttr) {
+                        option.style.display = "";
+                        option.disabled = false;
+                        option.hidden = false;
+                    } else {
+                        option.style.display = "none";
+                        option.disabled = true;
+                        option.hidden = true;
+                    }
+                });
+
+                const stillVisible = Array.from(select.options).find(
+                    o => o.value && !o.hidden
+                );
+                if (select.value !== currentValue || select.options[select.selectedIndex]?.hidden) {
+                    select.value = stillVisible ? stillVisible.value : "";
+                }
             });
-        });
         });
     });
 });

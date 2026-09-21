@@ -1,4 +1,5 @@
 {% extends "ranking/base.html" %}
+{% load humanize %}
 
 {% block content %}
 <h2>{{ season.name }} ランキング</h2>
@@ -65,7 +66,7 @@
             <tr class="{% if ranked_user == request.user %}my-row{% endif %}" {% if ranked_user == request.user %}id="my-row"{% endif %}>
                 <td>{{ forloop.counter0|add:rank_start }}</td>
                 <td>{{ ranked_user.display_name }}</td>
-                <td>{{ post.score }}</td>
+                <td>{{ post.score|intcomma }}</td>
                 <td><a href="{% url 'ranking:score_post_detail' post.id %}">詳細</a></td>
             </tr>
             {% endfor %}
@@ -74,7 +75,7 @@
             <tr class="{% if ranked_user == request.user %}my-row{% endif %}" {% if ranked_user == request.user %}id="my-row"{% endif %}>
                 <td>{{ forloop.counter0|add:rank_start }}</td>
                 <td>{{ ranked_user.display_name }}</td>
-                <td>{{ score }}</td>
+                <td>{{ score|intcomma }}</td>
             </tr>
             {% endfor %}
         {% endif %}

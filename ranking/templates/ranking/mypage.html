@@ -1,4 +1,5 @@
 {% extends "ranking/base.html" %}
+{% load humanize %}
 
 {% block content %}
 <h2>マイページ</h2>
@@ -19,7 +20,7 @@
         {% for post in posts %}
         <tr>
             <td data-label="ボス">{{ post.boss.name }}</td>
-            <td data-label="スコア">{{ post.score }}</td>
+            <td data-label="スコア">{{ post.score|intcomma }}</td>
             <td data-label="投稿日時">{{ post.posted_at }}</td>
             <td data-label="状態">
                 {% if post.is_flagged %}不正フラグ有{% elif post.is_hidden %}非表示{% else %}公開中{% endif %}

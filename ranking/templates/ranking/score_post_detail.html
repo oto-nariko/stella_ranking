@@ -1,4 +1,5 @@
 {% extends "ranking/base.html" %}
+{% load humanize %}
 
 {% block content %}
 <h2>投稿詳細</h2>
@@ -7,7 +8,7 @@
     <h3>基本情報</h3>
     <p>投稿者：{{ post.user.display_name }}</p>
     <p>ボス：{{ post.boss.name }}</p>
-    <p>スコア：{{ post.score }}</p>
+    <p>スコア：{{ post.score|intcomma }}</p>
 </div>
 
 <div class="panel detail-section">
