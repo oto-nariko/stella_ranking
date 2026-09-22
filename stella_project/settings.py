@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+import urllib.parse
 from dotenv import load_dotenv
 import dj_database_url
 load_dotenv()  # .envファイルの内容を環境変数に読み込む
@@ -78,13 +79,25 @@ WSGI_APPLICATION = 'stella_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
+db_url = os.environ.get('DATABASE_URL')
+
+if db_url:
+    # DATABASE_URL が設定されている場合（本番環境）
+    DATABASES = {
+        'default': dj_database_url.parse(
+            db_url,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+else:
+    # DATABASE_URL がない場合（ローカル開発環境）
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 
