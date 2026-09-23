@@ -1,0 +1,9 @@
+{% extends "ranking/base.html" %}
+
+{% block content %}
+<div class="panel error-panel">
+    <h2>エラーが発生しました</h2>
+    <p>サーバー側で問題が発生しました。しばらく経ってから、もう一度お試しください。</p>
+    <a href="{% url 'ranking:home' %}" class="btn-small btn-detail">ホームへ戻る</a>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "ranking/base.html" %}
+
+{% block content %}
+<div class="panel error-panel">
+    <h2>アクセスが拒否されました</h2>
+    <p>この操作を行う権限がないか、セキュリティ上の理由でリクエストが拒否されました。お手数ですが、もう一度お試しください。</p>
+    <a href="{% url 'ranking:home' %}" class="btn-small btn-detail">ホームへ戻る</a>
+</div>
+{% endblock %}
