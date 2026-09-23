@@ -72,6 +72,11 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("id_character_3")
     ].filter(Boolean);
 
+    const originalOptionsMap = new Map();
+    charSelects.forEach(select => {
+        originalOptionsMap.set(select, Array.from(select.options));
+    });
+
     const filterButtons = document.querySelectorAll("#attribute-filter-buttons .attr-btn");
 
     filterButtons.forEach(button => {
@@ -83,28 +88,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
             charSelects.forEach(select => {
                 const currentValue = select.value;
+                const originalOptions = originalOptionsMap.get(select);
 
-                Array.from(select.options).forEach(option => {
-                    if (!option.value) return;
+                select.innerHTML = "";
+
+                originalOptions.forEach(option => {
+                    if (!option.value) {
+                        select.appendChild(option.cloneNode(true));
+                        return;
+                    }
 
                     const charAttr = charAttrMap[option.value];
                     if (selectedAttr === "all" || charAttr === selectedAttr) {
-                        option.style.display = "";
-                        option.disabled = false;
-                        option.hidden = false;
-                    } else {
-                        option.style.display = "none";
-                        option.disabled = true;
-                        option.hidden = true;
+                        select.appendChild(option.cloneNode(true));
                     }
                 });
 
-                const stillVisible = Array.from(select.options).find(
-                    o => o.value && !o.hidden
-                );
-                if (select.value !== currentValue || select.options[select.selectedIndex]?.hidden) {
-                    select.value = stillVisible ? stillVisible.value : "";
-                }
+                const stillExists = Array.from(select.options).some(o => o.value === currentValue);
+                select.value = stillExists ? currentValue : "";
             });
         });
     });
