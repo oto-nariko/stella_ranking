@@ -164,6 +164,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 ADMIN_URL = os.environ.get('DJANGO_ADMIN_URL', 'admin/')
 
+CSRF_FAILURE_VIEW = 'ranking.views.csrf_failure'
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = True

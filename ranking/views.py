@@ -11,6 +11,12 @@ from django.core.paginator import Paginator
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.views import View
+from django.views.decorators.csrf import requires_csrf_token
+from django.shortcuts import render
+
+@requires_csrf_token
+def csrf_failure(request, reason=""):
+    return render(request, "403.html", status=403)
 
 class HomeView(TemplateView):
     template_name = "ranking/home.html"
