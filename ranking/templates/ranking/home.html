@@ -57,6 +57,10 @@
             <th>スコア</th>
             {% if selected_boss %}
             <th>詳細</th>
+            {% else %}
+            {% for boss in bosses %}
+            <th>{{ boss.name|slice:":1" }}</th>
+            {% endfor %}
             {% endif %}
         </tr>
     </thead>
@@ -71,11 +75,20 @@
             </tr>
             {% endfor %}
         {% else %}
-            {% for ranked_user, score in page_obj %}
+            {% for ranked_user, score, posts in page_obj %}
             <tr class="{% if ranked_user == request.user %}my-row{% endif %}" {% if ranked_user == request.user %}id="my-row"{% endif %}>
                 <td>{{ forloop.counter0|add:rank_start }}</td>
                 <td>{{ ranked_user.display_name }}</td>
                 <td>{{ score|intcomma }}</td>
+                {% for post in posts %}
+                <td>
+                    {% if post %}
+                    <a href="{% url 'ranking:score_post_detail' post.id %}?back={{ back_to_ranking|urlencode }}">詳細</a>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                {% endfor %}
             </tr>
             {% endfor %}
         {% endif %}

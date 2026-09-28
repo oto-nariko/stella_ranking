@@ -39,6 +39,10 @@ class ScorePostForm(forms.ModelForm):
         ]
 
         widgets = {
+                    "score": forms.NumberInput(attrs={
+                    "max": 9999999,
+                    "min": 0,
+                    }),
                     "badges_note": forms.Textarea(attrs={
                         "placeholder": 
                         "例:【カリン】虹貫通/虹SP/ダイダルバースト+3\n【オトハ】虹会心/虹SP\n【コゼット】魔痕+3/金SP",

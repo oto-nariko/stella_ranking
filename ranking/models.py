@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 from django.utils import timezone
-
+from django.core.validators import MaxValueValidator
 
 
 class CustomUser(AbstractUser):
@@ -130,7 +130,9 @@ class ScorePost(models.Model):
     boss = models.ForeignKey(
         Boss, on_delete=models.CASCADE, related_name="score_posts", verbose_name="ボス"
     )
-    score = models.PositiveIntegerField(verbose_name="スコア")
+    score = models.PositiveIntegerField(
+        verbose_name="スコア", validators=[MaxValueValidator(9999999)],
+    )
 
     character_1 = models.ForeignKey(
         Character, on_delete=models.PROTECT, related_name="+", verbose_name="使用キャラ1"
@@ -201,30 +203,24 @@ class ScorePost(models.Model):
 
     @classmethod
     def get_combined_ranking(cls, season, attribute_filter=None):
-        """
-        指定したシーズンの全ボスについて、ユーザーごとの合算スコアを降順で返す。
-        未投稿のボスは0点として扱う。
-        """
         bosses = season.bosses.all()
 
-        per_boss_scores = []
+        per_boss_posts = []
         for boss in bosses:
-            ranking = {
-                user: post.score
-                for user, post in cls.get_boss_ranking(boss, attribute_filter=attribute_filter)
-            }
-            per_boss_scores.append(ranking)
+            ranking = dict(cls.get_boss_ranking(boss, attribute_filter=attribute_filter))
+            per_boss_posts.append(ranking)
 
         all_users = set()
-        for ranking in per_boss_scores:
+        for ranking in per_boss_posts:
             all_users.update(ranking.keys())
 
-        combined = {}
+        combined = []
         for user in all_users:
-            total = sum(ranking.get(user, 0) for ranking in per_boss_scores)
-            combined[user] = total
+            posts = [ranking.get(user) for ranking in per_boss_posts]
+            total = sum(p.score for p in posts if p)
+            combined.append((user, total, posts))
 
-        return sorted(combined.items(), key=lambda item: item[1], reverse=True)
+        return sorted(combined, key=lambda item: item[1], reverse=True)
 
     class Meta:
         verbose_name = "スコア投稿"

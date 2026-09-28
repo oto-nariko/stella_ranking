@@ -427,6 +427,8 @@ tbody tr:last-child td {
 
 .detail-section p {
     margin: 6px 0;
+    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
 }
 
 .detail-section img {

@@ -75,7 +75,8 @@ class HomeView(TemplateView):
         my_rank = None
         my_score = None
         if self.request.user.is_authenticated:
-            for i, (user, value) in enumerate(full_ranking, start=1):
+            for i, row in enumerate(full_ranking, start=1):
+                user, value = row[0], row[1]
                 if user == self.request.user:
                     my_rank = i
                     my_score = value.score if selected_boss else value

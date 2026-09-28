@@ -19,7 +19,7 @@
         <button type="button" class="attr-btn" data-attr="wind">風</button>
         <button type="button" class="attr-btn" data-attr="light">光</button>
         <button type="button" class="attr-btn" data-attr="dark">闇</button>
-        <button type="button" class="attr-btn" data-attr="earth">土</button>
+        <button type="button" class="attr-btn" data-attr="earth">地</button>
         </div>
     </div>
 
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
 
                     const charAttr = charAttrMap[option.value];
-                    if (selectedAttr === "all" || charAttr === selectedAttr) {
+                    if (selectedAttr === "all" || charAttr === selectedAttr || option.value === currentValue) {
                         select.appendChild(option.cloneNode(true));
                     }
                 });
