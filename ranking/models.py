@@ -80,7 +80,7 @@ class Season(models.Model):
     @classmethod
     def get_current_season(cls):
         """現在の日付時点で、開始しているシーズンの中で一番新しいものを返す"""
-        return cls.objects.filter(start_date__lte=timezone.now().date()).first()
+        return cls.objects.filter(start_date__lte=timezone.localdate()).first()
 
 
 class Boss(models.Model):
