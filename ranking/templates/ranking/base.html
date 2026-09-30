@@ -22,6 +22,7 @@
             <a href="{% url 'ranking:logout_confirm' %}">ログアウト</a>
         {% else %}
             <a href="{% url 'ranking:home' %}">ランキング</a>
+            <a href="{% url 'ranking:score_post_create' %}">スコア投稿</a>
             <a href="{% url 'ranking:login' %}">ログイン</a>
             <a href="{% url 'ranking:signup' %}">サインアップ</a>
         {% endif %}
