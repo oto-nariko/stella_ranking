@@ -9,8 +9,11 @@ class CustomUser(AbstractUser):
     """
     カスタムユーザーのモデル
     """
+    username = models.CharField(
+        max_length=30, unique=True, verbose_name="ユーザーID"
+    )
     display_name = models.CharField(
-        max_length=30, verbose_name="表示名（ランキングで表示される名前）"
+        max_length=10, verbose_name="表示名（ランキングで表示される名前）"
     )
     is_banned = models.BooleanField(default=False, verbose_name="投稿禁止フラグ")
 
