@@ -7,6 +7,7 @@
     <title>{% block title %}ステラソラ非公式ランキング{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'ranking/css/style.css' %}">
     <link rel="icon" href="{% static 'ranking/favicon.ico' %}" type="image/x-icon">
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
 <header>

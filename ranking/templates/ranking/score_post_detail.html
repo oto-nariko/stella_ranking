@@ -1,6 +1,16 @@
 {% extends "ranking/base.html" %}
 {% load humanize %}
 
+{% block extra_head %}
+<meta property="og:title" content="{{ post.boss.name }} {{ post.score }}点">
+<meta property="og:description" content="ステラソラ非公式ランキングの投稿です">
+{% if post.screenshot_url %}
+<meta property="og:image" content="{{ post.screenshot_url }}">
+<meta name="twitter:image" content="{{ post.screenshot_url }}">
+{% endif %}
+<meta name="twitter:card" content="summary_large_image">
+{% endblock %}
+
 {% block content %}
 <h2>投稿詳細</h2>
 
@@ -51,12 +61,18 @@
     <img src="{{ post.damage_stats_screenshot_url }}" alt="ダメージ統計画面" style="max-width: 100%;">
 </div>
 
+{% if post.user == request.user %}
+<div class="panel">
+    <a href="{{ x_share_url }}" target="_blank" rel="noopener noreferrer" class="btn-share">Xで共有</a>
+</div>
+{% else %}
 <div class="panel">
     <form method="post" action="{% url 'ranking:score_post_report' post.id %}">
         {% csrf_token %}
         <button type="submit" class="btn-report">この投稿を通報する</button>
     </form>
 </div>
+{% endif %}
 
 <p><a href="{% url 'ranking:home' %}{{ request.GET.back }}">ランキングへ戻る</a></p>
 {% endblock %}

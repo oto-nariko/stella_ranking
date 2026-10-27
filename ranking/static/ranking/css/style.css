@@ -444,6 +444,18 @@ tbody tr:last-child td {
     color: var(--color-danger);
     border: 1px solid var(--color-danger);
 }
+/* ==========================
+   x共有ボタン
+========================== */
+.btn-share {
+    display: inline-block;
+    background-color: #000000;
+    color: #FFFFFF;
+    border-radius: var(--radius);
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
 
 /* ==========================
    通知メッセージ

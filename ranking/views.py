@@ -13,6 +13,7 @@ from django.http import HttpResponseRedirect
 from django.views import View
 from django.views.decorators.csrf import requires_csrf_token
 from django.shortcuts import render
+from urllib.parse import quote
 
 @requires_csrf_token
 def csrf_failure(request, reason=""):
@@ -101,6 +102,19 @@ class ScorePostDetailView(DetailView):
     template_name = "ranking/score_post_detail.html"
     context_object_name = "post"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.object
+
+        text = f"{post.boss.name}で{post.score:,}点を記録しました！ #ステラソラ非公式ランキング"
+        url = self.request.build_absolute_uri(self.request.path)
+
+        context["x_share_url"] = (
+            "https://x.com/intent/tweet?text=" + quote(text, safe="")
+            + "&url=" + quote(url, safe="")
+        )
+        return context
+
 
 class SignUpView(CreateView):
     form_class = SignUpForm
@@ -176,7 +190,7 @@ class ReportCreateView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
         score_post = ScorePost.objects.filter(pk=pk).first()
-        if score_post:
+        if score_post and score_post.user != request.user:
             Report.objects.get_or_create(user=request.user, score_post=score_post)
             messages.success(request, "通報しました。")
         return HttpResponseRedirect(reverse("ranking:score_post_detail", kwargs={"pk": pk}))
