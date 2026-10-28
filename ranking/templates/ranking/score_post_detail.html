@@ -63,7 +63,7 @@
 
 {% if post.user == request.user %}
 <div class="panel">
-    <a href="{{ x_share_url }}" target="_blank" rel="noopener noreferrer" class="btn-share">Xで共有</a>
+    <button type="button" id="x-share-button" class="btn-share" data-url="{{ x_share_url }}">Xで共有</button>
 </div>
 {% else %}
 <div class="panel">
@@ -75,4 +75,19 @@
 {% endif %}
 
 <p><a href="{% url 'ranking:home' %}{{ request.GET.back }}">ランキングへ戻る</a></p>
+
+<script>
+//x共有ボタンの処理
+document.getElementById("x-share-button")?.addEventListener("click", function () {
+    const intent = this.dataset.url;
+    const win = window.open("", "_blank");// ポップアップを止められないよう、押した直後に開いておき、URLが決まったら移る
+    if (win) {
+        win.opener = null;
+        win.location.href = intent;
+    } else {
+        location.href = intent;
+    }
+});
+</script>
+
 {% endblock %}
